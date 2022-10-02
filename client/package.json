@@ -12,7 +12,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@nuxtjs/auth-next": "5.0.0-1648802546.c9880dc",
+    "@nuxtjs/axios": "^5.13.6",
     "bootstrap-vue": "^2.22.0",
-    "nuxt": "^2.15.8"
+    "nuxt": "^2.15.8",
+    "sweetalert2": "^11.4.36"
   }
 }
