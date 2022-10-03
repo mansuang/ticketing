@@ -24,3 +24,11 @@ build:
         manual:
           - src: "**/*.vue"
             dest: .
+    - image: mansuang/tickets
+      context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
