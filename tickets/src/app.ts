@@ -6,6 +6,7 @@ import { createTicketRouter } from './routes/new';
 import { errorHandler, NotFoundError, currentUser } from '@thundertickets/common';
 import cookieSession from 'cookie-session';
 import { showTicketRouter } from './routes/show';
+import { indexTicketRouter } from './routes';
 
 const app = express();
 app.set('trust proxy', true);
@@ -18,6 +19,7 @@ app.use(cookieSession({
 app.use(currentUser);
 
 app.use(createTicketRouter);
+app.use(indexTicketRouter);
 app.use(showTicketRouter);
 
 app.all('*', async () => {
