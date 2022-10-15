@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express'
 import { requireAuth, validateRequest } from '@thundertickets/common';
 import { body } from 'express-validator'
 import { Ticket } from '../models/ticket';
+import { TicketCreatedPublisher } from '../tickets/publishers/ticket-created-publisher';
 
 const router = express.Router();
 
@@ -23,6 +24,13 @@ router.post('/api/tickets',
         });
 
         await ticket.save();
+
+        await new TicketCreatedPublisher(client).publish({
+            id: ticket.id,
+            title: ticket.title,
+            price: ticket.price,
+            userId: ticket.userId
+        });
 
         res.status(201).send(ticket);
     });
