@@ -1,129 +1,31 @@
-import mongoose from 'mongoose';
-import request from 'supertest';
-import { app } from '../../app';
-import { natsWrapper } from '../../nats-wrapper'
-
-const orderId = () => {
-    return new mongoose.Types.ObjectId().toHexString();
-}
-
-it('returns a 404 if the the provided id does not exist', async () => {
-    await request(app)
-        .put(`/api/orders/${orderId()}`)
-        .set('Cookie', global.signin())
-        .send({
-            title: 'new title',
-            price: 20
-        })
-        .expect(404);
-});
-
-it('returns a 401 if the user is not authenticated', async () => {
-    await request(app)
-        .put(`/api/orders/${orderId()}`)
-        .send({
-            title: 'new title',
-            price: 20
-        }).expect(401);
-});
+import mongoose from "mongoose";
+import request from "supertest";
+import { app } from "../../app";
+import { Ticket } from "../../models/ticket";
 
 
-it('returns a 401 if the user does not own order', async () => {
-    const user1 = global.signin();
+it('marks an order as cancelled', async () => {
+    // create a ticket with Ticket Model
+    const ticket1 = await createTicket('Ticket-1', 10)
+    const ticket2 = await createTicket('Ticket-2', 20)
+
+    // make a request to create an order
+    const signInUser1 = global.signin();
+    const order1 = await global.createOrder(signInUser1, ticket1);
+    const order2 = await global.createOrder(signInUser1, ticket2);
+
+    expect(await ticket2.isReserved()).toBeTruthy();
+    // make a request to cancel the order
     const response = await request(app)
-        .post('/api/orders')
-        .set('Cookie', user1)
-        .send({
-            title: 'my title',
-            price: 20
-        });
+        .delete(`/api/orders/${order2.id}`)
+        .set('Cookie', signInUser1.cookie)
+        .expect(204);
 
-    const user2 = global.signin();
+    // expectation to make sure the thing is cancelled
+    expect(await ticket2.isReserved()).toBeFalsy();
+    expect(await ticket1.isReserved()).toBeTruthy();
 
-    await request(app)
-        .put(`/api/orders/${response.body.id}`)
-        .set('Cookie', user2)
-        .send({
-            title: 'new title',
-            price: 30
-        })
-        .expect(401);
 });
 
-it('returns a 400 if the user provides an invalid title or price', async () => {
-    const user1 = global.signin();
-    const response = await request(app)
-        .post('/api/orders')
-        .set('Cookie', user1)
-        .send({
-            title: 'my title',
-            price: 20
-        });
 
-    await request(app)
-        .put(`/api/orders/${response.body.id}`)
-        .set('Cookie', user1)
-        .send({
-            title: '',
-            price: 30
-        })
-        .expect(400);
-
-    await request(app)
-        .put(`/api/orders/${response.body.id}`)
-        .set('Cookie', user1)
-        .send({
-            title: 'new title',
-            price: -20
-        })
-        .expect(400);
-});
-
-it('update order if user provides valid inputs', async () => {
-    const user1 = global.signin();
-    const response = await request(app)
-        .post('/api/orders')
-        .set('Cookie', user1)
-        .send({
-            title: 'my title',
-            price: 20
-        });
-
-    await request(app)
-        .put(`/api/orders/${response.body.id}`)
-        .set('Cookie', user1)
-        .send({
-            title: 'new title',
-            price: 30
-        })
-        .expect(200);
-
-    const order = await request(app)
-        .get(`/api/orders/${response.body.id}`)
-        .send();
-
-    expect(order.body.title).toEqual('new title');
-    expect(order.body.price).toEqual(30);
-});
-
-it('publishes an event', async () => {
-    const user1 = global.signin();
-    const response = await request(app)
-        .post('/api/orders')
-        .set('Cookie', user1)
-        .send({
-            title: 'my title',
-            price: 20
-        });
-
-    await request(app)
-        .put(`/api/orders/${response.body.id}`)
-        .set('Cookie', user1)
-        .send({
-            title: 'new title',
-            price: 30
-        })
-        .expect(200);
-
-    expect(natsWrapper.client.publish).toHaveBeenCalled();
-});
+it.todo('emits a order cancelled event');
