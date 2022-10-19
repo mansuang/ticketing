@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import request from "supertest";
 import { app } from "../../app";
 import { Ticket } from "../../models/ticket";
+import { natsWrapper } from "../../nats-wrapper";
 
 
 it('marks an order as cancelled', async () => {
@@ -28,4 +29,15 @@ it('marks an order as cancelled', async () => {
 });
 
 
-it.todo('emits a order cancelled event');
+it('emits a order cancelled event', async () => {
+    const ticket1 = await createTicket('Ticket-1', 10)
+    const signInUser1 = global.signin();
+    const order1 = await global.createOrder(signInUser1, ticket1);
+
+    const response = await request(app)
+        .delete(`/api/orders/${order1.id}`)
+        .set('Cookie', signInUser1.cookie)
+        .expect(204);
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
