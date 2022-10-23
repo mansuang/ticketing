@@ -71,7 +71,9 @@ global.signin = () => {
 }
 
 global.createTicket = async (title: string, price: number) => {
+    const id = new mongoose.Types.ObjectId().toHexString();
     const ticket = Ticket.build({
+        id,
         title,
         price
     });
