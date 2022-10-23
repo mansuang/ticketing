@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import { requireAuth, validateRequest, NotFoundError, NotAuthorizedError } from '@thundertickets/common';
+import { requireAuth, validateRequest, NotFoundError, NotAuthorizedError, BadRequestError } from '@thundertickets/common';
 import { body } from 'express-validator'
 import { Ticket } from '../models/ticket';
 import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
@@ -19,6 +19,10 @@ router.put('/api/tickets/:id',
 
         if (!ticket) {
             throw new NotFoundError();
+        }
+
+        if (ticket.orderId) {
+            throw new BadRequestError('Cannot edit a reserved ticket');
         }
 
         if (ticket.userId !== req.currentUser!.id) {
