@@ -48,9 +48,10 @@ orderSchema.plugin(updateIfCurrentPlugin);
 orderSchema.statics.build = (attrs: OrderAttrs) => {
     return new Order({
         _id: attrs.id,
-        version: attrs.price,
+        version: attrs.version,
+        price: attrs.price,
         userId: attrs.userId,
-        status: attrs.status
+        status: attrs.status,
     })
 }
 
