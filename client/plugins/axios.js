@@ -23,12 +23,12 @@ export default function ({ $axios, store, $auth, redirect }) {
     $axios.onError(error => {
         if (error.response.status === 400 || error.response.status === 422) {
             store.dispatch('validation/setErrors', error.response.data.errors);
-            return Promise.resolve(error);
+            return Promise.reject(error);
         }
 
         if (error.response.status === 403) {
             store.dispatch('forbidden/setErrors', error.response.data.message);
-            return Promise.resolve(error);
+            return Promise.reject(error);
             // redirect('/forbidden')
         }
 

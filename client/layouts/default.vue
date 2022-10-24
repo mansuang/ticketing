@@ -5,6 +5,7 @@
             <h5 class="my-0 mr-md-auto font-weight-normal">Company name</h5>
             <nav class="my-2 my-md-0 mr-md-3">
                 <NuxtLink class="p-2 text-dark" to="/">Home</NuxtLink>
+                <NuxtLink class="p-2 text-dark" to="/tickets/new">New Ticket</NuxtLink>
                 <NuxtLink class="p-2 text-dark" to="/user">User</NuxtLink>
             </nav>
             <NuxtLink v-if="!$auth.user" class="btn btn-outline-primary" to="/login">Sign In</NuxtLink>
@@ -15,13 +16,16 @@
         </div>
 
         <div class="container">
+            <ShowError />
             <Nuxt />
         </div>
     </div>
 </template>
 
 <script>
+import ShowError from '../components/show-error.vue';
 // import { mapGetters } from 'vuex'
 export default {
+    components: { ShowError }
 }
 </script>>
