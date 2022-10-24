@@ -8,6 +8,7 @@ declare global {
     var signin: () => { cookie: string[], userId: string };
 }
 
+process.env.STRIPE_KEY = 'sk_test_51LwEFKHacTtnL4oa74la2vabe2E7zgmU4MH9dbZKABpGpFnkwV5ovLL1f32CbQk6iTsXZnNGlEYnVbD7y529vNy900tj5S7aaj';
 let mongo: any;
 beforeAll(async () => {
     process.env.JWT_KEY = 'asdfasdf';
