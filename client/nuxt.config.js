@@ -6,7 +6,8 @@ module.exports = {
     ],
     axios: {
         baseURL: '/',
-        credentials: true
+        credentials: true,
+        secure: false,
     },
     publicRuntimeConfig: {
         axios: {
@@ -16,7 +17,7 @@ module.exports = {
 
     privateRuntimeConfig: {
         axios: {
-            baseURL: "https://ingress-nginx-controller.ingress-nginx.svc.cluster.local"
+            baseURL: "http://ingress-nginx-controller.ingress-nginx.svc.cluster.local"
         }
     },
     auth: {
@@ -31,26 +32,8 @@ module.exports = {
             home: '/user'
         },
         strategies: {
-            sanctumToken: {
-                provider: 'laravel/jwt',
-                url: '/',
-                token: {
-                    property: 'token',
-                    global: true,
-                    // required: true,
-                    // type: 'Bearer'
-                },
-                user: {
-                    // property: 'user',
-                    // autoFetch: true
-                },
-                endpoints: {
-                    login: { url: '/api/users/signin', method: 'post' },
-                    logout: { url: '/api/users/signout', method: 'post' },
-                    user: { url: '/api/users/currentuser', method: 'get' }
-                }
-            },
             local: {
+                scheme: '~/schemes/customStrategy',
                 token: {
                     property: 'token',
                     global: true,
@@ -75,5 +58,5 @@ module.exports = {
     plugins: [
         '~/plugins/validation',
     ],
-    ssr: false,
+    ssr: true,
 }

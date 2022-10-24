@@ -1,20 +1,20 @@
 export default function ({ $axios, store, $auth, redirect }) {
 
-    $axios.onRequest((config) => {
-        console.log('config', config)
-    })
+    // $axios.onRequest((config) => {
+    //     // $auth.ctx.app.$axios.defaults.headers.common['host'] = 'ticketing.test'
+    //     // $axios.defaults.headers.common['host'] = 'ticketing.test'
+    //     // config.headers['Host'] = 'ticketing.test';
+    //     // console.log('config', config)
+    //     // return config;
+    // })
 
     $auth.onRedirect((to, from) => {
-        console.log('redirectFrom', from)
-        console.log('redirectTo', to)
-        console.log('redirect.LoggedIn !!!', $auth?.loggedIn)
+        // console.log('redirectFrom', from)
+        // console.log('redirectTo', to)
+        // console.log('redirect.LoggedIn !!!', $auth?.loggedIn)
         // you can optionally change `to` by returning a new value
     })
 
-    console.log({
-        "server": process.server,
-        "client": process.client
-    })
 
 
     console.log('$auth.LoggedIn !!!', $auth?.loggedIn)
@@ -42,9 +42,10 @@ export default function ({ $axios, store, $auth, redirect }) {
         return Promise.reject(error);
     });
 
-    $axios.onRequest(() => {
+    $axios.onRequest((config) => {
         store.dispatch('validation/clearErrors');
-
+        // config.headers['Host'] = 'ticketing.test';
+        // return config;
     });
 
 }
