@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 jest.mock('../nats-wrapper');
 
 declare global {
-    var signin: () => string[];
+    var signin: () => { cookie: string[], userId: string };
 }
 
 let mongo: any;
@@ -52,5 +52,8 @@ global.signin = () => {
 
     const base64 = Buffer.from(sessionJSON).toString('base64');
 
-    return [`session=${base64}`];
+    return {
+        cookie: [`session=${base64}`],
+        userId: payload.id
+    };
 }

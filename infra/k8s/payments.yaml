@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tickets
+  name: payments
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tickets
+      app: payments
   template:
     metadata:
       labels:
-        app: tickets
+        app: payments
     spec:
       containers:
-        - name: tickets
-          image: mansuang/tickets
+        - name: payments
+          image: mansuang/payments
           ports:
             - containerPort: 3000
           env:
@@ -27,21 +27,20 @@ spec:
             - name: NATS_CLUSTER_ID
               value: "ticketing"
             - name: MONGO_URI
-              value: "mongodb://tickets-mongo:27017/tickets"
+              value: "mongodb://payments-mongo:27017/payments"
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: tickets
+  name: payments
 spec:
   selector:
-    app: tickets
+    app: payments
   ports:
     - port: 3000
       targetPort: 3000
