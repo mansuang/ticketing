@@ -19,4 +19,4 @@ jobs:
         env:
           DIGITALOCEAN_CLUSTER_ID: ${{ secrets.DIGITALOCEAN_CLUSTER_ID }}
       - name: Deploy infra/k8s
-        run: kubectl apply -f infra/k8s
+        run: kubectl apply -f infra/k8s && kubectl apply -f infra/k8s-prod
