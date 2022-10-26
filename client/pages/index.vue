@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Tickets</h1>
+        <h1>Ticketsx</h1>
         <b-table striped hover :items="formatTickets" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc">
             <!-- A custom formatted column -->
             <template #cell(title)="data">
