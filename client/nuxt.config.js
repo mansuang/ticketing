@@ -23,7 +23,6 @@ module.exports = {
     auth: {
         plugins: [
             '~/plugins/axios',
-            // '~/plugins/ssr-request',
         ],
         redirect: {
             login: '/login',
