@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image
-        run: cd client && docker build -t mansuang/client ./
+        run: cd client && docker build -t mansuang/client .
       - name: Login to dockerhub
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         env:
