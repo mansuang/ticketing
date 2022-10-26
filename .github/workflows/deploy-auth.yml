@@ -20,3 +20,12 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push image to docker hub
         run: docker push mansuang/auth
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Connect to k8s
+        run: doctl kubernetes cluster kubeconfig save $DIGITALOCEAN_CLUSTER_ID
+        env:
+          DIGITALOCEAN_CLUSTER_ID: ${{ secrets.DIGITALOCEAN_CLUSTER_ID }}
+      - name: Restart deployment
+        run: kubectl rollout restart auth
