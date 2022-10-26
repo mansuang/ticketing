@@ -1,9 +1,9 @@
-name: deploy-tickets
+name: deploy-client
 
 on:
   push:
     branches: ["main"]
-    paths: ["tickets/**"]
+    paths: ["client/**"]
 
 jobs:
   build:
@@ -12,14 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image
-        run: cd tickets && docker build -t mansuang/tickets .
+        run: cd client && docker build -t mansuang/client .
       - name: Login to dockerhub
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push image to docker hub
-        run: docker push mansuang/tickets
+        run: docker push mansuang/client
       - uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
@@ -28,4 +28,4 @@ jobs:
         env:
           DIGITALOCEAN_CLUSTER_ID: ${{ secrets.DIGITALOCEAN_CLUSTER_ID }}
       - name: Restart deployment
-        run: kubectl rollout restart deployment/tickets
+        run: kubectl rollout restart deployment/client
