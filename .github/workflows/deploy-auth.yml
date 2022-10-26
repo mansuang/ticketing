@@ -28,4 +28,4 @@ jobs:
         env:
           DIGITALOCEAN_CLUSTER_ID: ${{ secrets.DIGITALOCEAN_CLUSTER_ID }}
       - name: Restart deployment
-        run: kubectl rollout restart auth
+        run: kubectl rollout restart deployment/auth
